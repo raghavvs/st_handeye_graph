@@ -3,8 +3,8 @@
 #include <random>
 #include <sstream>
 #include <iostream>
-#include <Eigen/Dense>
-#include <opencv2/opencv.hpp>
+#include <eigen3/Eigen/Dense>
+#include <opencv4/opencv2/opencv.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
@@ -57,33 +57,51 @@ public:
             matrix.push_back(row);
         }
 
-        Eigen::MatrixXd m(matrix.size(), matrix[0].size());
-        for(int i=0; i<matrix.size(); i++) {
-            for(int j=0; j<matrix[i].size(); j++) {
+        // std::cout << filename << std::endl;
+        // for(int i = 0; i < matrix.size(); i++){
+        //     for(int j = 0; j < matrix[0].size(); j++){
+        //         std::cout << matrix[i][j] << ", ";
+        //     }
+        //     std::cout << "\n";
+        // }
+        
+        // temp fix, bad
+        Eigen::MatrixXd m(4, 4);
+        for(int i=0; i<4; i++) {
+            for(int j=0; j<4; j++) {
                 m(i, j) = matrix[i][j];
             }
         }
+
+        // Eigen::MatrixXd m(matrix.size(), matrix[0].size());
+        // for(int i=0; i<matrix.size(); i++) {
+        //     for(int j=0; j<matrix[i].size(); j++) {
+        //         m(i, j) = matrix[i][j];
+        //     }
+        // }
 
         return m;
     }
 
     // reads data from a directory
     static std::shared_ptr<Dataset> read(const std::string& dataset_dir, const std::string& ros_camera_params_file, bool visualize) {
-        int PATTERN_ROWS = 4;
+        int PATTERN_ROWS = 9;
         int PATTERN_COLS = 11;
-        double L = 0.032;
+        double L = 0.0202;
         std::shared_ptr<Dataset> dataset(new Dataset());
         dataset->pattern_3d.resize(3, PATTERN_ROWS * PATTERN_COLS);
         for(int j=0; j<PATTERN_COLS; j++) {
             for(int i=0; i<PATTERN_ROWS; i++) {
-                double y_offset = j % 2 == 0 ? 0 : L / 2;
+                double x = L * (PATTERN_ROWS - i);
+                double y = L * (j + 1);
                 int idx = j * PATTERN_ROWS + i;
-                dataset->pattern_3d.col(idx) = Eigen::Vector3d(j * L / 2, i * L + y_offset, 0);
+                dataset->pattern_3d.col(idx) = Eigen::Vector3d(x, y, 0.0);
             }
         }
 
         if(!ros_camera_params_file.empty()) {
             if(!dataset->read_ros_camera_params(ros_camera_params_file)) {
+                std::cout << "return no pointer" << std::endl;
                 return nullptr;
             }
         }
@@ -115,8 +133,10 @@ public:
             cv::Mat undistorted;
             cv::undistort(image, undistorted, cv_camera_matrix, cv_distortion);
 
+            // std::cout << "reached here" << std::endl;
+
             cv::Mat cv_grid_2d;
-            bool ret = cv::findCirclesGrid(undistorted, cv::Size(PATTERN_ROWS, PATTERN_COLS), cv_grid_2d, cv::CALIB_CB_ASYMMETRIC_GRID);
+            bool ret = cv::findChessboardCorners(undistorted, cv::Size(PATTERN_ROWS, PATTERN_COLS), cv_grid_2d, cv::CALIB_CB_ADAPTIVE_THRESH + cv::CALIB_CB_NORMALIZE_IMAGE + cv::CALIB_CB_FAST_CHECK);
             cv::drawChessboardCorners(undistorted, cv::Size(PATTERN_ROWS, PATTERN_COLS), cv_grid_2d, ret);
 
             if(!ret) {
@@ -126,7 +146,7 @@ public:
             }
 
             Eigen::MatrixXd grid_2d(2, PATTERN_ROWS * PATTERN_COLS);
-            for(int i=0; i<44; i++) {
+            for(int i=0; i<PATTERN_ROWS * PATTERN_COLS; i++) {
                 grid_2d(0, i) = cv_grid_2d.at<cv::Vec2f>(i)[0];
                 grid_2d(1, i) = cv_grid_2d.at<cv::Vec2f>(i)[1];
             }
