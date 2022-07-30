@@ -3,7 +3,7 @@
 mkdir data
 
 camera_params="../calibration_data/camera_info.yaml"
-calib_test_dir="../calibration_data/calib_b"
+calib_test_dir="../calibration_data/calib_a"
 
 command="../build/calibrate -u"
 command="$command -c $camera_params"
