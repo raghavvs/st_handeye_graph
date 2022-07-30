@@ -46,3 +46,7 @@ Kenji Koide and Emanuele Menegatti, General Hand-Eye Calibration based on Reproj
 ## Contact
 Kenji Koide, Intelligent Autonomous Systems Laboratory, University of Padova, Italy.
 koide@dei.unipd.it
+
+## Note
+
+This repository was combined with the [calibrate.py](https://github.com/RMDLO/zed_ws/blob/main/src/val_zed_deploy/node/calibrate.py) script to automatically collect and save calibration images.
