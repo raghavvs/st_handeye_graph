@@ -1,6 +1,9 @@
 #!/bin/bash
 
-mkdir data
+# Check if 'data' directory exists. If not, create it.
+if [ ! -d "data" ]; then
+    mkdir data
+fi
 
 # camera_params="../../st_handeye_eval/camera_info.yaml"
 # calib_test_dir="../../st_handeye_eval/calib_test"
