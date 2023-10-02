@@ -1,28 +1,37 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(st_handeye)
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
-set(VISP_DIR ${VISP_DIR} "/home/hollydinkel/visp-build-release")
+set(VISP_DIR ${VISP_DIR} "/home/raghav/visp/visp-build")
 set(Eigen3_DIR ${Eigen3_DIR} "/usr/include/eigen3")
-set(OpenCV_DIR ${OpenCV_DIR} "/usr/include/opencv4/opencv2") # opencv4
+#set(OpenCV_DIR ${OpenCV_DIR} "/usr/local/include/opencv4/opencv2")
+#list(APPEND CMAKE_PREFIX_PATH "/usr/local")
 
 find_package(G2O REQUIRED)
 find_package(VISP REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(OpenCV REQUIRED)
+
+find_package(OpenCV 4.7.0 EXACT REQUIRED)
+set(OpenCV4_LIBS ${OpenCV_LIBS})
+
+find_package(OpenCV 3.4.19 EXACT REQUIRED)
+set(OpenCV3_LIBS ${OpenCV_LIBS})
+
 find_package(Boost REQUIRED filesystem program_options)
 
 include_directories(
 	include
         ${G2O_INCLUDE_DIRS}
-        ${VISP_INCLUDE_DIRS}
+	${VISP_INCLUDE_DIRS}
         ${EIGEN3_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 	${OpenCV_INCLUDE_DIRS}
 )
 
 link_directories(${G2O_LIBRARY_DIRS})
+message("OpenCV_LIBS: ${OpenCV_LIBS}")
+message("OpenCV_INCLUDE_DIRS: ${OpenCV_INCLUDE_DIRS}")
 
 ###########
 ## Build ##
@@ -69,35 +78,12 @@ target_link_libraries(st_handeye_visp
   ${VISP_LIBRARIES}
 )
 
-# # handeye_simulation
-# add_executable(handeye_simulation
-#   src/handeye_simulation.cpp
-# )
-# target_link_libraries(handeye_simulation
-#   st_handeye_graph
-#   st_handeye_visp
-# )
-# add_dependencies(handeye_simulation
-#   st_handeye_graph
-#   st_handeye_visp
-# )
-
-# # handeye_simulation_xray
-# add_executable(handeye_simulation_xray
-#   src/handeye_simulation_xray.cpp
-# )
-# target_link_libraries(handeye_simulation_xray
-#     st_handeye_graph_xray
-# )
-# add_dependencies(handeye_simulation_xray
-#   st_handeye_graph_xray
-# )
-
 # calibrate
 add_executable(calibrate
   src/calibrate.cpp
 )
 target_link_libraries(calibrate
+    ${OpenCV4_LIBS}
     st_handeye_graph
     st_handeye_visp
 )
@@ -111,10 +97,10 @@ add_executable(calibrate_charuco
   src/calibrate_charuco.cpp
 )
 target_link_libraries(calibrate_charuco
+    ${OpenCV4_LIBS}
     st_handeye_graph
     st_handeye_visp
 )
 add_dependencies(calibrate_charuco
   st_handeye_graph
-  st_handeye_visp
-)
+  st_handeye_visp)
