@@ -5,32 +5,26 @@ add_compile_options(-std=c++17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(VISP_DIR ${VISP_DIR} "/home/raghav/visp/visp-build")
 set(Eigen3_DIR ${Eigen3_DIR} "/usr/include/eigen3")
-#set(OpenCV_DIR ${OpenCV_DIR} "/usr/local/include/opencv4/opencv2")
-#list(APPEND CMAKE_PREFIX_PATH "/usr/local")
+set(OpenCV3_DIR “/usr/local/opencv3/share/OpenCV”)
 
 find_package(G2O REQUIRED)
 find_package(VISP REQUIRED)
 find_package(Eigen3 REQUIRED)
-
-find_package(OpenCV 4.7.0 EXACT REQUIRED)
-set(OpenCV4_LIBS ${OpenCV_LIBS})
-
 find_package(OpenCV 3.4.19 EXACT REQUIRED)
-set(OpenCV3_LIBS ${OpenCV_LIBS})
-
 find_package(Boost REQUIRED filesystem program_options)
 
 include_directories(
 	include
         ${G2O_INCLUDE_DIRS}
-	${VISP_INCLUDE_DIRS}
+	      ${VISP_INCLUDE_DIRS}
         ${EIGEN3_INCLUDE_DIRS}
-	${Boost_INCLUDE_DIRS}
-	${OpenCV_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        ${OpenCV_INCLUDE_DIRS}
 )
 
 link_directories(${G2O_LIBRARY_DIRS})
-message("OpenCV_LIBS: ${OpenCV_LIBS}")
+message("OpenCV4_LIBS: ${OpenCV_LIBS}")
+message("OpenCV3_LIBS: ${OpenCV3_LIBS}")
 message("OpenCV_INCLUDE_DIRS: ${OpenCV_INCLUDE_DIRS}")
 
 ###########
@@ -83,7 +77,6 @@ add_executable(calibrate
   src/calibrate.cpp
 )
 target_link_libraries(calibrate
-    ${OpenCV4_LIBS}
     st_handeye_graph
     st_handeye_visp
 )
@@ -97,7 +90,6 @@ add_executable(calibrate_charuco
   src/calibrate_charuco.cpp
 )
 target_link_libraries(calibrate_charuco
-    ${OpenCV4_LIBS}
     st_handeye_graph
     st_handeye_visp
 )

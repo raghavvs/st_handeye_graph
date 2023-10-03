@@ -4,10 +4,10 @@
 #include <sstream>
 #include <iostream>
 #include <eigen3/Eigen/Dense>
-#include <opencv2/opencv.hpp>
+#include </usr/local/opencv3/include/opencv2/opencv.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
-#include </usr/local/include/opencv4/opencv2/aruco/charuco.hpp>
+#include </usr/local/opencv3/include/opencv2/aruco/charuco.hpp>
 #include <st_handeye/st_handeye.hpp>
 
 
