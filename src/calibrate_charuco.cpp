@@ -111,7 +111,7 @@ public:
         float L = 0.024;
         std::shared_ptr<Dataset> dataset(new Dataset());
         cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
-        cv::Ptr<cv::aruco::CharucoBoard> board = cv::aruco::CharucoBoard::create(7, 10, 0.024f, 0.018f, dictionary);
+        cv::Ptr<cv::aruco::CharucoBoard> board = cv::aruco::CharucoBoard::create(10, 14, 0.024f, 0.018f, dictionary);
 
         if(!ros_camera_params_file.empty()) {
             if(!dataset->read_ros_camera_params(ros_camera_params_file)) {
