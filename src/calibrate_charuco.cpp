@@ -110,8 +110,10 @@ public:
     static std::shared_ptr<Dataset> read(const std::string& dataset_dir, const std::string& ros_camera_params_file, bool visualize) {
         float L = 0.024;
         std::shared_ptr<Dataset> dataset(new Dataset());
+
+        /* MODIFY: Update the parameters in the functions when using different size board */
         cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
-        cv::Ptr<cv::aruco::CharucoBoard> board = cv::aruco::CharucoBoard::create(10, 14, 0.024f, 0.018f, dictionary);
+        cv::Ptr<cv::aruco::CharucoBoard> board = cv::aruco::CharucoBoard::create(5, 7, 0.024f, 0.018f, dictionary);
 
         if(!ros_camera_params_file.empty()) {
             if(!dataset->read_ros_camera_params(ros_camera_params_file)) {
@@ -154,6 +156,8 @@ public:
             // cv::cvtColor(image, imageCopy, cv::COLOR_BGR2GRAY);
             image.copyTo(imageCopy);
             std::vector<std::vector<cv::Point2f> > markerCorners;
+
+            /*UPDATE: Might have to replace default parameters for detector parameters */
             cv::Ptr<cv::aruco::DetectorParameters> params = cv::aruco::DetectorParameters::create();
             params->cornerRefinementMethod = cv::aruco::CORNER_REFINE_NONE;
             cv::aruco::detectMarkers(image, board->dictionary, markerCorners, markerIds, params);

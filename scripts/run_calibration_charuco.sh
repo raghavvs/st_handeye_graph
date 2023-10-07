@@ -9,7 +9,7 @@ fi
 # calib_test_dir="../../st_handeye_eval/calib_test"
 
 camera_params="../calibration_data/20230920_camera_info.yaml"
-calib_test_dir="../calibration_data/20231005"
+calib_test_dir="../calibration_data/20231006"
 
 # reconst_dir="../../st_handeye_eval/spirit_reconst"
 
