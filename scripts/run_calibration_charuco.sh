@@ -1,17 +1,9 @@
 #!/bin/bash
 
-# Check if 'data' directory exists. If not, create it.
-if [ ! -d "data" ]; then
-    mkdir data
-fi
+mkdir data
 
-# camera_params="../../st_handeye_eval/camera_info.yaml"
-# calib_test_dir="../../st_handeye_eval/calib_test"
-
-camera_params="../calibration_data/20230920_camera_info.yaml"
-calib_test_dir="../calibration_data/20231006"
-
-# reconst_dir="../../st_handeye_eval/spirit_reconst"
+camera_params="../calibration_data/20231006_camera_info.yaml"
+calib_test_dir="../calibration_data/20231011"
 
 command="../build/calibrate_charuco -u"
 command="$command -c $camera_params"
@@ -26,14 +18,5 @@ command="$command --save_hand2eye_visp data/hand2eye_visp.csv"
 command="$command --save_hand2eye_dq data/hand2eye_dq.csv"
 command="$command --save_hand2eye_graph data/hand2eye_graph.csv"
 command="$command $calib_test_dir"
-
-# $command
-
-# command="./reconst.py"
-# command="$command -c $camera_params"
-# command="$command data/hand2eye_visp.csv"
-# command="$command data/hand2eye_dq.csv"
-# command="$command data/hand2eye_graph.csv"
-# command="$command $reconst_dir"
 
 $command

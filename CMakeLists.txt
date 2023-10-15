@@ -4,29 +4,32 @@ project(st_handeye)
 add_compile_options(-std=c++17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+#add generic path / specify this in documentation before build
 set(VISP_DIR ${VISP_DIR} "/home/raghav/visp/visp-build")
 set(Eigen3_DIR ${Eigen3_DIR} "/usr/include/eigen3")
+#opencv3 on raghav's 
 set(OpenCV3_DIR “/usr/local/opencv3/share/OpenCV”)
 
 find_package(G2O REQUIRED)
 find_package(VISP REQUIRED)
 find_package(Eigen3 REQUIRED)
+# set 3.4.19
 find_package(OpenCV 3.4.19 EXACT REQUIRED)
 find_package(Boost REQUIRED filesystem program_options)
+#new package
+find_package(Ceres REQUIRED)
 
 include_directories(
 	include
-        ${G2O_INCLUDE_DIRS}
-	      ${VISP_INCLUDE_DIRS}
-        ${EIGEN3_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS}
-        ${OpenCV_INCLUDE_DIRS}
+    ${G2O_INCLUDE_DIRS}
+    ${VISP_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
+    ${OpenCV_INCLUDE_DIRS}
+    ${CERES_INCLUDE_DIRS}
 )
 
 link_directories(${G2O_LIBRARY_DIRS})
-message("OpenCV4_LIBS: ${OpenCV_LIBS}")
-message("OpenCV3_LIBS: ${OpenCV3_LIBS}")
-message("OpenCV_INCLUDE_DIRS: ${OpenCV_INCLUDE_DIRS}")
 
 ###########
 ## Build ##
@@ -73,6 +76,30 @@ target_link_libraries(st_handeye_visp
   ${VISP_LIBRARIES}
 )
 
+# # handeye_simulation
+# add_executable(handeye_simulation
+#   src/handeye_simulation.cpp
+# )
+# target_link_libraries(handeye_simulation
+#   st_handeye_graph
+#   st_handeye_visp
+# )
+# add_dependencies(handeye_simulation
+#   st_handeye_graph
+#   st_handeye_visp
+# )
+
+# # handeye_simulation_xray
+# add_executable(handeye_simulation_xray
+#   src/handeye_simulation_xray.cpp
+# )
+# target_link_libraries(handeye_simulation_xray
+#     st_handeye_graph_xray
+# )
+# add_dependencies(handeye_simulation_xray
+#   st_handeye_graph_xray
+# )
+
 # calibrate
 add_executable(calibrate
   src/calibrate.cpp
@@ -96,4 +123,5 @@ target_link_libraries(calibrate_charuco
 )
 add_dependencies(calibrate_charuco
   st_handeye_graph
-  st_handeye_visp)
+  st_handeye_visp
+)
